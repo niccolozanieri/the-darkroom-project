@@ -1,17 +1,23 @@
-#include "assimp.h"
-#include "aiPostProcess.h"
-#include "aiScene.h"
-
 #include "GL/glut.h"
-#include <IL/il.h>
 
-//to map image filenames to textureIds
-#include <string.h>
-#include <map>
-
-#include<iostream>
-
-int main() {
-	std::cout << "The darkroom project";
+void display(void) {
+	glFlush();
+	
+	return;
 }
 
+int main(int argc, char** argv)
+{
+	glutInit(&argc, argv);
+	glutInitWindowSize(1920, 1080);
+	glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
+	
+
+	glutCreateWindow("The Darkroom Project");
+	
+	
+	glutDisplayFunc(display);
+	glutMainLoop();
+
+	return 0;
+}
