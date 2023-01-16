@@ -1,0 +1,42 @@
+Info,  T9972: Load models\openglTestScene.obj
+Info,  T9972: Found a matching importer for this file format
+Info,  T9972: Import root directory is 'models\'
+Info,  T9972: Entering post processing pipeline
+Warn,  T9972: Found 16 degenerated primitives
+Skipping one or more lines with the same contents
+Warn,  T9972: Found 312 degenerated primitives
+Skipping one or more lines with the same contents
+Info,  T9972: Points: 3, Lines: 5, Triangles: 9, Polygons: 0 (Meshes, X = removed)
+Error, T9972: FindInvalidDataProcess fails on mesh positions: All vectors are identical
+Error, T9972: Deleting mesh: Unable to continue without vertex positions
+Error, T9972: FindInvalidDataProcess fails on mesh uvcoords: All vectors are identical
+Skipping one or more lines with the same contents
+Error, T9972: FindInvalidDataProcess fails on mesh positions: All vectors are identical
+Error, T9972: Deleting mesh: Unable to continue without vertex positions
+Error, T9972: FindInvalidDataProcess fails on mesh uvcoords: All vectors are identical
+Skipping one or more lines with the same contents
+Error, T9972: FindInvalidDataProcess fails on mesh positions: All vectors are identical
+Error, T9972: Deleting mesh: Unable to continue without vertex positions
+Error, T9972: FindInvalidDataProcess fails on mesh uvcoords: All vectors are identical
+Skipping one or more lines with the same contents
+Info,  T9972: FindInvalidDataProcess finished. Found issues ...
+Info,  T9972: Tangents are undefined for line and point meshes
+Skipping one or more lines with the same contents
+Error, T9972: Unable to compute tangents: UV0 and normals must be there 
+Info,  T9972: Tangents are undefined for line and point meshes
+Error, T9972: Unable to compute tangents: UV0 and normals must be there 
+Info,  T9972: Tangents are undefined for line and point meshes
+Error, T9972: Unable to compute tangents: UV0 and normals must be there 
+Info,  T9972: JoinVerticesProcess finished | Verts in: 95368 out: 39771 | ~58.3%
+Error, T9972: This algorithm works on triangle meshes only
+Skipping one or more lines with the same contents
+Warn,  T9972: Mesh 5: Not suitable for vcache optimization
+Warn,  T9972: Mesh 7: Not suitable for vcache optimization
+Error, T9972: This algorithm works on triangle meshes only
+Warn,  T9972: Mesh 9: Not suitable for vcache optimization
+Error, T9972: This algorithm works on triangle meshes only
+Warn,  T9972: Mesh 11: Not suitable for vcache optimization
+Error, T9972: This algorithm works on triangle meshes only
+Warn,  T9972: Mesh 13: Not suitable for vcache optimization
+Info,  T9972: Cache relevant are 4 meshes (24852 faces). Average output ACMR is 0.993642
+Info,  T9972: Leaving post processing pipeline
