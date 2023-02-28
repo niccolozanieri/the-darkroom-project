@@ -11,6 +11,10 @@
 // ----------------------------------------------------------------------------
 
 
+
+
+
+
 // assimp include files. These three are usually needed.
 #include "assimp.h"
 #include "aiPostProcess.h"
@@ -23,8 +27,7 @@
 #include <string.h>
 #include <map>
 
-float tank_x_tr = 0;
-
+float tankTrX = 0;
 
 static const std::string basepath = "./models/"; //per i file blend
 
@@ -47,11 +50,67 @@ GLfloat LightPosition[] = { 0.0f, 0.0f, 15.0f, 1.0f };
 #define TRUE                1
 #define FALSE               0
 
-
+// Definition of single objects indeces in mChildren structure
+const int TANK_BODY = 4;
+const int TABLE_TOP = 3;
+const int TABLE_LEFT_LEGS = 1;
+const int TABLE_RIGHT_LEGS = 2;
 
 // ----------------------------------------------------------------------------
-void reshape(int width, int height)
-{
+void display(void) {
+	float tmp;
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	gluLookAt(0.f, 0.f, 3.f, 0.f, 0.f, -5.f, 0.f, 1.f, 0.f);
+
+	// rotate it around the y axis
+	glRotatef(45.f, 1.f, 0.f, 0.f);
+
+	// scale the whole asset to fit into our view frustum 
+	tmp = scene_max.x - scene_min.x;
+	tmp = aisgl_max(scene_max.y - scene_min.y, tmp);
+	tmp = aisgl_max(scene_max.z - scene_min.z, tmp);
+	tmp = 1.f / tmp;
+	glScalef(tmp * 3, tmp * 3, tmp * 3);
+
+	// center the model
+	glTranslatef(-scene_center.x, -scene_center.y, -scene_center.z);
+
+	recursive_render(scene, scene->mRootNode->mChildren[TABLE_TOP], 1.0);
+	recursive_render(scene, scene->mRootNode->mChildren[TABLE_RIGHT_LEGS], 1.0);
+	recursive_render(scene, scene->mRootNode->mChildren[TABLE_LEFT_LEGS], 1.0);
+	glPushMatrix();
+	glTranslatef(0.f, tankTrX, 0.f);
+	recursive_render(scene, scene->mRootNode->mChildren[TANK_BODY], 1.0);
+	glPopMatrix();
+
+
+
+
+	glutSwapBuffers();
+
+}
+
+void keyboard(unsigned char key, int x, int y) {
+	switch (key) {
+	case 'l':
+		tankTrX = 0.3f;
+		break;
+	case 'r':
+		tankTrX = 0.0f;
+
+		break;
+	}
+
+	glutPostRedisplay();
+
+}
+
+// ----------------------------------------------------------------------------
+void reshape(int width, int height) {
 	const double aspectRatio = (float)width / height, fieldOfView = 45.0;
 
 	glMatrixMode(GL_PROJECTION);
@@ -97,8 +156,7 @@ void get_bounding_box_for_node(const struct aiNode* nd,
 
 // ----------------------------------------------------------------------------
 
-void get_bounding_box(struct aiVector3D* min, struct aiVector3D* max)
-{
+void get_bounding_box(struct aiVector3D* min, struct aiVector3D* max) {
 	struct aiMatrix4x4 trafo;
 	aiIdentityMatrix4(&trafo);
 
@@ -109,8 +167,7 @@ void get_bounding_box(struct aiVector3D* min, struct aiVector3D* max)
 
 // ----------------------------------------------------------------------------
 
-void color4_to_float4(const struct aiColor4D* c, float f[4])
-{
+void color4_to_float4(const struct aiColor4D* c, float f[4]) {
 	f[0] = c->r;
 	f[1] = c->g;
 	f[2] = c->b;
@@ -119,8 +176,7 @@ void color4_to_float4(const struct aiColor4D* c, float f[4])
 
 // ----------------------------------------------------------------------------
 
-void set_float4(float f[4], float a, float b, float c, float d)
-{
+void set_float4(float f[4], float a, float b, float c, float d) {
 	f[0] = a;
 	f[1] = b;
 	f[2] = c;
@@ -128,8 +184,7 @@ void set_float4(float f[4], float a, float b, float c, float d)
 }
 
 // ----------------------------------------------------------------------------
-void apply_material(const struct aiMaterial* mtl)
-{
+void apply_material(const struct aiMaterial* mtl) {
 	float c[4];
 
 	GLenum fill_mode;
@@ -202,15 +257,13 @@ void apply_material(const struct aiMaterial* mtl)
 // ----------------------------------------------------------------------------
 
 // Can't send color down as a pointer to aiColor4D because AI colors are ABGR.
-void Color4f(const struct aiColor4D* color)
-{
+void Color4f(const struct aiColor4D* color) {
 	glColor4f(color->r, color->g, color->b, color->a);
 }
 
 // ----------------------------------------------------------------------------
 
-void recursive_render(const struct aiScene* sc, const struct aiNode* nd, float scale)
-{
+void recursive_render(const struct aiScene* sc, const struct aiNode* nd, float scale) {
 	unsigned int i;
 	unsigned int n = 0, t;
 	struct aiMatrix4x4 m = nd->mTransformation;
@@ -225,8 +278,7 @@ void recursive_render(const struct aiScene* sc, const struct aiNode* nd, float s
 	glMultMatrixf((float*)&m);
 
 	// draw all meshes assigned to this node
-	for (int n = 0; n < nd->mNumMeshes; ++n)
-	{
+	for (int n = 0; n < nd->mNumMeshes; ++n) {
 		const struct aiMesh* mesh = scene->mMeshes[nd->mMeshes[n]];
 
 		///
@@ -307,48 +359,8 @@ void recursive_render(const struct aiScene* sc, const struct aiNode* nd, float s
 }
 
 // ----------------------------------------------------------------------------
-void display(void)
-{
-	float tmp;
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	gluLookAt(0.f, 0.f, 3.f, 0.f, 0.f, -5.f, 0.f, 1.f, 0.f);
-
-	// rotate it around the y axis
-	glRotatef(45.f, 1.f, 0.f, 0.f);
-
-	// scale the whole asset to fit into our view frustum 
-	tmp = scene_max.x - scene_min.x;
-	tmp = aisgl_max(scene_max.y - scene_min.y, tmp);
-	tmp = aisgl_max(scene_max.z - scene_min.z, tmp);
-	tmp = 1.f / tmp;
-	glScalef(tmp * 3, tmp * 3, tmp * 3);
-
-	// center the model
-	glTranslatef(-scene_center.x, -scene_center.y, -scene_center.z);
-
-	recursive_render(scene, scene->mRootNode->mChildren[1], 1.0);
-	recursive_render(scene, scene->mRootNode->mChildren[2], 1.0);
-	recursive_render(scene, scene->mRootNode->mChildren[3], 1.0);
-	glPushMatrix();
-	    glTranslatef(0.f, tank_x_tr, 0.f);
-        recursive_render(scene, scene->mRootNode->mChildren[4], 1.0);
-	glPopMatrix();
-
-
-
-
-	glutSwapBuffers();
-
-}
-
-// ----------------------------------------------------------------------------
-
-int loadasset(const char* path)
-{
+int loadasset(const char* path) {
 	// we are taking one of the postprocessing presets to avoid
 	// writing 20 single postprocessing flags here.
 	scene = aiImportFile(path, aiProcessPreset_TargetRealtime_Quality);
@@ -363,8 +375,7 @@ int loadasset(const char* path)
 	return 1;
 }
 
-int LoadGLTextures(const aiScene* scene)
-{
+int LoadGLTextures(const aiScene* scene) {
 	ILboolean success;
 
 	/* Before calling ilInit() version should be checked. */
@@ -470,8 +481,8 @@ int LoadGLTextures(const aiScene* scene)
 	return TRUE;
 }
 
-int InitGL()					 // All Setup For OpenGL goes here
-{
+int InitGL() {				 // All Setup For OpenGL goes here
+
 	if (!LoadGLTextures(scene))
 	{
 		return FALSE;
@@ -500,23 +511,9 @@ int InitGL()					 // All Setup For OpenGL goes here
 	return TRUE;					// Initialization Went OK
 }
 
-void keyboard(unsigned char key, int x, int y) {
-	switch (key) {
-	    case 'l':
-			tank_x_tr = 0.3f;
-			break;
-		case 'r':
-			tank_x_tr = 0.f;
 
-			break;
-	}
-
-	glutPostRedisplay();
-	
-}
 // ----------------------------------------------------------------------------
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
 	struct aiLogStream stream;
 
 	glutInitWindowSize(1920, 1080);

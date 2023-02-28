@@ -1,0 +1,32 @@
+// Nomi funzioni e variabili in Camel-Case es.: myFunction(...){}    int myVariable
+// Nomi file con parole separate da trattino alto (-) es.: my-filename.cpp
+// Usare const invece di #DEFINE per definire costanti, nome costanti tutto maiuscolo con parole
+   separate da trattini es.: const int MY_CONST = 42
+
+void foo(int x, int y) {
+    // body, 4 spazi o TAB da inizio riga (controllare lunghezza TAB da impostazioni VS)
+}
+
+if(x < 10) {    
+    // body
+}
+
+x = x + 1    // Lo spazio tra i vari caratteri nelle operazioni le rende più leggibili secondo me
+
+for(int i = 0; i < N; i++) {
+    // body
+}
+
+while(i < N) {
+    // body
+}
+
+switch(x) {
+    case 1:
+        break;
+    case 2:
+        // qualcosa
+        break;
+    default:
+        break;
+}
